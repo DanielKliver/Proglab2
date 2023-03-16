@@ -83,4 +83,69 @@ void int_vector_free(IntVector *v)
 	free(v);
 }
 //
+//Получает на вход указатель на массив, индекс элемента и значение, на которое нужно произвести замену
+void int_vector_set_item(IntVector *v, size_t index, int item)
+{
+	if (index <= v->capacity)
+		v->data[index] = item;
+	v->size++;
+}
+//
+//Выводит обьём вектора
+size_t int_vector_get_capacity(const IntVector *v)
+{
+	return v->capacity;
+}
+//
+void int_vector_pop_back(IntVector *v)
+{
+	if (v->size != 0) 
+		v->size--;
+}
+//
+int int_vector_shrink_to_fit(IntVector *v)
+{
+	if (v->size < v->capacity)
+	{
+		v->capacity = v->size;
+		int *t = realloc(v->data, v->capacity * sizeof(int));
+		if (t == NULL)
+		{
+			return -1;
+		}
+		v->data = t;
+		return 0;
+	}
+	return -1;
+}
+//
+int int_vector_resize(IntVector *v, size_t new_size)
+{
+	if (new_size == v->size)
+		return 0;
+	if (new_size > v->size) {
 
+		int *t = realloc(v->data, new_size * sizeof(int));
+		if (t == NULL)
+		{
+			return -1;
+		}
+		v->data = t;
+		for (int i = v->size; i < new_size; i++)
+			v->data[i] = 0;
+	}
+	v->size = new_size;
+	return 0;	
+}
+int int_vector_reserve(IntVector *v, size_t new_capacity)
+{
+	if (new_capacity > v->capacity) {
+		v->capacity = new_capacity;
+		int *t = realloc(v->data, new_capacity * sizeof(int));
+		if (t == NULL)
+			return -1;
+		v->data = t;
+		return 0;
+	}
+	return -1;
+}
